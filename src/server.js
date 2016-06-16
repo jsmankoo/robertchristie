@@ -1,7 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
 import React from 'react';
-import ReactDom from 'react-dom/server';
+import {renderToString} from 'react-dom/server';
+
+import App from './Components/App/App';
 
 // Comment out during production
 // var webpack = require('webpack');
@@ -54,7 +56,8 @@ app.use((req, res, next) => {
 app.use(express.static(`./public`));
 
 app.get(`/`, function(req, res){
-  res.render(`index`);
+  console.log(renderToString(<App />));
+  res.render(`index`, {app: renderToString(<App />)});
 });
 
 app.get(`/iHomefinder`, function(req, res){

@@ -14,7 +14,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _server = require('react-dom/server');
 
-var _server2 = _interopRequireDefault(_server);
+var _App = require('./Components/App/App');
+
+var _App2 = _interopRequireDefault(_App);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -63,7 +65,8 @@ app.use(function (req, res, next) {
 app.use(_express2.default.static('./public'));
 
 app.get('/', function (req, res) {
-  res.render('index');
+  console.log((0, _server.renderToString)(_react2.default.createElement(_App2.default, null)));
+  res.render('index', { app: (0, _server.renderToString)(_react2.default.createElement(_App2.default, null)) });
 });
 
 app.get('/iHomefinder', function (req, res) {
