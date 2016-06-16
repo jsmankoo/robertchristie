@@ -1,43 +1,67 @@
-const http         = require('http'),
-      fs           = require('fs'),
-      path         = require('path'),
-      contentTypes = require('./utils/content-types'),
-      sysInfo      = require('./utils/sys-info'),
-      env          = process.env;
+import express from 'express';
+import morgan from 'morgan';
+import React from 'react';
+import ReactDom from 'react-dom/server';
 
-let server = http.createServer(function (req, res) {
-  let url = req.url;
-  if (url == '/') {
-    url += 'index.html';
+// Comment out during production
+// var webpack = require('webpack');
+// var webpackConfig = require('./webpack.dev');
+// var compiler = webpack(webpackConfig);
+var stylus = require('stylus');
+var axis = require('axis');
+var jeet = require('jeet');
+var rupture = require('rupture');
+
+
+// Init express
+let app = express();
+
+app.set(`port`, process.env.NODE_PORT || 3000);
+app.set(`ip`, process.env.NODE_IP || `localhost`);
+
+app.set(`views`, `./views`);
+app.set(`view engine`, `pug`);
+
+app.use(morgan(`dev`));
+
+
+// Comment out during production
+// app.use(require('webpack-dev-middleware')(compiler, {
+//   noInfo: true, publicPath: webpackConfig.output.publicPath,
+// }));
+// app.use(require('webpack-hot-middleware')(compiler, {
+//   log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000,
+// }));
+app.use(stylus.middleware(
+  { src: __dirname + '/public'
+  , compile: (str, path) => stylus(str)
+      .set('filename', path)
+      .use(axis())
+      .use(jeet())
+      .use(rupture())
   }
+))
 
-  // IMPORTANT: Your application HAS to respond to GET /health with status 200
-  //            for OpenShift health monitoring
+app.use((req, res, next) => {
 
-  if (url == '/health') {
-    res.writeHead(200);
-    res.end();
-  } else if (url == '/info/gen' || url == '/info/poll') {
-    res.setHeader('Content-Type', 'application/json');
-    res.setHeader('Cache-Control', 'no-cache, no-store');
-    res.end(JSON.stringify(sysInfo[url.slice(6)]()));
-  } else {
-    fs.readFile('./static' + url, function (err, data) {
-      if (err) {
-        res.writeHead(404);
-        res.end('Not found');
-      } else {
-        let ext = path.extname(url).slice(1);
-        res.setHeader('Content-Type', contentTypes[ext]);
-        if (ext === 'html') {
-          res.setHeader('Cache-Control', 'no-cache, no-store');
-        }
-        res.end(data);
-      }
-    });
-  }
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  next();
 });
 
-server.listen(env.NODE_PORT || 3000, env.NODE_IP || 'localhost', function () {
-  console.log(`Application worker ${process.pid} started...`);
+app.use(express.static(`./public`));
+
+app.get(`/`, function(req, res){
+  res.render(`index`);
+});
+
+app.get(`/iHomefinder`, function(req, res){
+  res.render(`iHomefinder`);
+});
+
+app.listen(app.get(`port`), app.get(`ip`), function(){
+  console.log('Application ip ' + app.get(`ip`) + ':' + app.get(`port`));
+  console.log('worker ' + process.pid + 'started...');
 });
