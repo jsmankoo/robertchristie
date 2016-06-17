@@ -1,19 +1,16 @@
 import express from 'express';
 import morgan from 'morgan';
-// import React from 'react';
-// import {renderToString} from 'react-dom/server';
-// import webpack from 'webpack';
-// import webpackDevMiddleware from 'webpack-dev-middleware';
-// import webpackHotMiddleware from 'webpack-hot-middleware';
-// import stylus from 'stylus';
-// import axis from 'axis';
-// import jeet from 'jeet';
-// import rupture from 'rupture';
-//
-// import App from './Components/App/App';
-// import webpackDevConfig from '../webpack.dev';
-//
-// const compiler = webpack(webpackDevConfig);
+import React from 'react';
+import {renderToString} from 'react-dom/server';
+import {Provider} from 'react-redux';
+
+import stylus from 'stylus';
+import axis from 'axis';
+import jeet from 'jeet';
+import rupture from 'rupture';
+
+import App from './Components/App/App';
+import Store from './Store/Store';
 
 // Init express
 let app = express();
@@ -26,30 +23,15 @@ app.set(`view engine`, `pug`);
 
 app.use(morgan(`dev`));
 
-
-// app.use(
-//   webpackDevMiddleware(compiler, {
-//     noInfo: true,
-//     publicPath: webpackDevConfig.output.publicPath
-//   })
-// );
-// app.use(
-//   webpackHotMiddleware(compiler, {
-//     log: console.log,
-//     path: '__webpack_hmr/',
-//     heartbeat: 10*1000
-//   })
-// );
-//
-// app.use(stylus.middleware(
-//   { src: __dirname + '/public'
-//   , compile: (str, path) => stylus(str)
-//       .set('filename', path)
-//       .use(axis())
-//       .use(jeet())
-//       .use(rupture())
-//   }
-// ))
+app.use(stylus.middleware(
+  { src: __dirname + '/public'
+  , compile: (str, path) => stylus(str)
+      .set('filename', path)
+      .use(axis())
+      .use(jeet())
+      .use(rupture())
+  }
+))
 
 app.use((req, res, next) => {
 
@@ -63,8 +45,11 @@ app.use((req, res, next) => {
 app.use(express.static(`./public`));
 
 app.get(`/`, function(req, res){
-  // , {app: renderToString(<App />)}
-  res.render(`index`);
+  res.render(`index`, {app: renderToString(
+    <Provider store={Store}>
+      <App />
+    </Provider>
+  )});
 });
 
 app.get(`/other`, function(req, res){
