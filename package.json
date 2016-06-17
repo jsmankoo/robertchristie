@@ -6,7 +6,8 @@
   "main": "start.js",
   "scripts": {
     "start": "node --use_strict start.js",
-    "build": "babel ./src/ -d ./dist"
+    "build": "babel ./src/ -d ./dist",
+    "build:w": "babel -w ./src/ -d ./dist"
   },
   "author": "Ionut-Cristian Florescu <ionut.florescu@gmail.com>",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "pug": "^0.1.0",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
+    "react-hot-loader": "^1.3.0",
     "rupture": "^0.6.1",
     "stylus": "^0.54.5",
     "webpack": "^1.13.1",

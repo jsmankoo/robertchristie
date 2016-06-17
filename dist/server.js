@@ -8,26 +8,22 @@ var _morgan = require('morgan');
 
 var _morgan2 = _interopRequireDefault(_morgan);
 
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _server = require('react-dom/server');
-
-var _App = require('./Components/App/App');
-
-var _App2 = _interopRequireDefault(_App);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// Comment out during production
-// var webpack = require('webpack');
-// var webpackConfig = require('./webpack.dev');
-// var compiler = webpack(webpackConfig);
-var stylus = require('stylus');
-var axis = require('axis');
-var jeet = require('jeet');
-var rupture = require('rupture');
+// import React from 'react';
+// import {renderToString} from 'react-dom/server';
+// import webpack from 'webpack';
+// import webpackDevMiddleware from 'webpack-dev-middleware';
+// import webpackHotMiddleware from 'webpack-hot-middleware';
+// import stylus from 'stylus';
+// import axis from 'axis';
+// import jeet from 'jeet';
+// import rupture from 'rupture';
+//
+// import App from './Components/App/App';
+// import webpackDevConfig from '../webpack.dev';
+//
+// const compiler = webpack(webpackDevConfig);
 
 // Init express
 var app = (0, _express2.default)();
@@ -40,18 +36,29 @@ app.set('view engine', 'pug');
 
 app.use((0, _morgan2.default)('dev'));
 
-// Comment out during production
-// app.use(require('webpack-dev-middleware')(compiler, {
-//   noInfo: true, publicPath: webpackConfig.output.publicPath,
-// }));
-// app.use(require('webpack-hot-middleware')(compiler, {
-//   log: console.log, path: '/__webpack_hmr', heartbeat: 10 * 1000,
-// }));
-app.use(stylus.middleware({ src: __dirname + '/public',
-  compile: function compile(str, path) {
-    return stylus(str).set('filename', path).use(axis()).use(jeet()).use(rupture());
-  }
-}));
+// app.use(
+//   webpackDevMiddleware(compiler, {
+//     noInfo: true,
+//     publicPath: webpackDevConfig.output.publicPath
+//   })
+// );
+// app.use(
+//   webpackHotMiddleware(compiler, {
+//     log: console.log,
+//     path: '__webpack_hmr/',
+//     heartbeat: 10*1000
+//   })
+// );
+//
+// app.use(stylus.middleware(
+//   { src: __dirname + '/public'
+//   , compile: (str, path) => stylus(str)
+//       .set('filename', path)
+//       .use(axis())
+//       .use(jeet())
+//       .use(rupture())
+//   }
+// ))
 
 app.use(function (req, res, next) {
 
@@ -65,8 +72,12 @@ app.use(function (req, res, next) {
 app.use(_express2.default.static('./public'));
 
 app.get('/', function (req, res) {
-  console.log((0, _server.renderToString)(_react2.default.createElement(_App2.default, null)));
-  res.render('index', { app: (0, _server.renderToString)(_react2.default.createElement(_App2.default, null)) });
+  // , {app: renderToString(<App />)}
+  res.render('index');
+});
+
+app.get('/other', function (req, res) {
+  res.render('other');
 });
 
 app.get('/iHomefinder', function (req, res) {
