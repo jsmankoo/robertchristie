@@ -2,12 +2,26 @@ var path = require('path');
 var express = require('express');
 var webpack = require('webpack');
 var config = require('./webpack.config.dev');
+var stylus = require('stylus');
+var axis = require('axis');
+var jeet = require('jeet');
+var rupture = require('rupture');
 
 var app = express();
 var compiler = webpack(config);
 
 app.set(`views`, `./views`);
 app.set(`view engine`, `pug`);
+
+app.use(stylus.middleware(
+  { src: __dirname + '/public'
+  , compile: (str, path) => stylus(str)
+      .set('filename', path)
+      .use(axis())
+      .use(jeet())
+      .use(rupture())
+  }
+))
 
 app.use(require('webpack-dev-middleware')(compiler, {
   noInfo: true,
@@ -17,6 +31,7 @@ app.use(require('webpack-dev-middleware')(compiler, {
 app.use(require('webpack-hot-middleware')(compiler));
 
 app.use(express.static(`./public`));
+app.use('/bower_components', express.static(`./bower_components`));
 
 app.get('*', function(req, res) {
   res.render('index');

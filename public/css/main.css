@@ -1,0 +1,203 @@
+html {
+  box-sizing: border-box;
+}
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+html,
+body,
+div,
+span,
+applet,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+acronym,
+address,
+big,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+s,
+samp,
+small,
+strike,
+strong,
+sub,
+sup,
+tt,
+var,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-family: inherit;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+body {
+  line-height: 1;
+  color: #000;
+  background: #fff;
+}
+ol,
+ul {
+  list-style: none;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  vertical-align: middle;
+}
+caption,
+th,
+td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+a img {
+  border: none;
+}
+a {
+  text-decoration: none;
+  color: #c44d58;
+}
+a:hover {
+  color: #bac9a9;
+}
+h1,
+.H1 {
+  font-size: 38.4px;
+  font-size: 2.4rem;
+  text-rendering: optimizelegibility;
+  font-weight: bold;
+  margin: 0.75em 0;
+  line-height: 1.6em;
+  font-family: 'BlairITCStd';
+  font-weight: 400;
+  margin: 0;
+}
+h2,
+.H2 {
+  font-size: 28.8px;
+  font-size: 1.8rem;
+  text-rendering: optimizelegibility;
+  font-weight: bold;
+  margin: 0.75em 0;
+  line-height: 1.6em;
+  font-family: 'BlairITCStd';
+  font-weight: 400;
+  margin: 0;
+}
+h3,
+.H3 {
+  font-size: 24px;
+  font-size: 1.5rem;
+  text-rendering: optimizelegibility;
+  font-weight: bold;
+  margin: 0.75em 0;
+  line-height: 1.6em;
+  font-family: 'BlairITCStd';
+  font-weight: 400;
+  margin: 0;
+}
+h4,
+.H4 {
+  font-size: 20.8px;
+  font-size: 1.3rem;
+  text-rendering: optimizelegibility;
+  font-weight: bold;
+  margin: 0.75em 0;
+  line-height: 1.6em;
+  font-family: 'BlairITCStd';
+  font-weight: 400;
+  margin: 0;
+}
+h5,
+.H5 {
+  font-size: 16px;
+  font-size: 1rem;
+  text-rendering: optimizelegibility;
+  font-weight: bold;
+  margin: 0.75em 0;
+  line-height: 1.6em;
+  font-family: 'BlairITCStd';
+  font-weight: 400;
+  margin: 0;
+}
+h6,
+.H6 {
+  font-size: 14.4px;
+  font-size: 0.9rem;
+  text-rendering: optimizelegibility;
+  font-weight: bold;
+  margin: 0.75em 0;
+  line-height: 1.6em;
+  text-transform: uppercase;
+  font-family: 'BlairITCStd';
+  font-weight: 400;
+  margin: 0;
+}
+p {
+  font-weight: normal;
+  font-style: normal;
+  font-family: 'chaparral-pro-display';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 10px;
+}
+@media only screen and (min-width: 768px) {
+  p {
+    font-size: 19px;
+    line-height: 25px;
+    padding: 10px 0px;
+  }
+}
+.slider-decorator-0,
+.slider-decorator-1 {
+  display: none;
+}
+html body {
+  font-family: 'chaparral-pro-display';
+  font-weight: 400;
+}

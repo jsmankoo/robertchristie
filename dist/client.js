@@ -12,6 +12,10 @@ var _Store = require('./Store/Store');
 
 var _Store2 = _interopRequireDefault(_Store);
 
+var _smoothScroll = require('smooth-scroll');
+
+var _smoothScroll2 = _interopRequireDefault(_smoothScroll);
+
 var _App = require('./Components/App/App');
 
 var _App2 = _interopRequireDefault(_App);
@@ -22,4 +26,4 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   _reactRedux.Provider,
   { store: _Store2.default },
   _react2.default.createElement(_App2.default, null)
-), document.getElementById('rootApp'));
+), document.getElementById('rootApp'), _smoothScroll2.default.init());

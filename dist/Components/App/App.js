@@ -8,6 +8,9 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _dec, _class;
 
+//import Components
+
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -20,6 +23,38 @@ var _reactMotion = require('react-motion');
 
 var _reactRedux = require('react-redux');
 
+var _prismic = require('prismic.io');
+
+var _prismic2 = _interopRequireDefault(_prismic);
+
+var _Nav = require('../Nav/Nav');
+
+var _Nav2 = _interopRequireDefault(_Nav);
+
+var _Menu = require('../Menu/Menu');
+
+var _Menu2 = _interopRequireDefault(_Menu);
+
+var _Jumbotron = require('../Jumbotron/Jumbotron');
+
+var _Jumbotron2 = _interopRequireDefault(_Jumbotron);
+
+var _Featured = require('../Featured/Featured');
+
+var _Featured2 = _interopRequireDefault(_Featured);
+
+var _About = require('../About/About');
+
+var _About2 = _interopRequireDefault(_About);
+
+var _Contact = require('../Contact/Contact');
+
+var _Contact2 = _interopRequireDefault(_Contact);
+
+var _Foot = require('../Foot/Foot');
+
+var _Foot2 = _interopRequireDefault(_Foot);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30,9 +65,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 var mapStateToProps = function mapStateToProps(_ref) {
   var Menu = _ref.Menu;
+  var App = _ref.App;
 
   return {
-    menuOpen: Menu.get('open')
+    menuOpen: Menu.get('open'),
+    loaded: App.get('loaded'),
+    delay: App.get('delay'),
+    jumbotronLoaded: App.get('initJumbotron')
   };
 };
 
@@ -40,71 +79,145 @@ var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     toggle: function toggle() {
       dispatch({ type: 'MENU_TOGGLE' });
+    },
+    appInit: function appInit() {
+      dispatch({ type: 'APP_INIT' });
+    },
+    initJumbotron: function initJumbotron() {
+      dispatch({ type: 'APP_JUMBOTRON_INIT' });
+    },
+    addProperty: function addProperty(address, link, photo, price) {
+      dispatch({
+        type: 'FEATURED_ADD_PROPERTY',
+        address: address,
+        link: link,
+        photo: photo,
+        price: price
+      });
+    },
+    aboutInit: function aboutInit(background, name, tablet, mobile, markdown) {
+      dispatch({
+        type: 'ABOUT_INIT',
+        background: background,
+        name: name,
+        tablet: tablet,
+        mobile: mobile,
+        markdown: markdown
+      });
+    },
+    contactInit: function contactInit(name, markdown, mobile, email, address) {
+      dispatch({
+        type: 'CONTACT_INIT',
+        name: name,
+        markdown: markdown,
+        mobile: mobile,
+        email: email,
+        address: address
+      });
+    },
+    footInit: function footInit(copyright, information, facebook, instagram, twitter) {
+      dispatch({
+        type: 'FOOT_INIT',
+        copyright: copyright,
+        information: information,
+        facebook: facebook,
+        twitter: twitter,
+        instagram: instagram
+      });
     }
   };
 };
 
-var App = (_dec = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps), _dec(_class = function (_Component) {
+var App = (_dec = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps), _dec(_class = (0, _radium2.default)(_class = function (_Component) {
   _inherits(App, _Component);
 
-  function App(props) {
+  function App() {
     _classCallCheck(this, App);
 
-    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(App).call(this, props));
-
-    _this.state = {
-      AppMounted: false
-    };
-    return _this;
+    return _possibleConstructorReturn(this, Object.getPrototypeOf(App).apply(this, arguments));
   }
 
   _createClass(App, [{
     key: 'componentDidMount',
     value: function componentDidMount() {
-      var _this2 = this;
+      var _props = this.props;
+      var delay = _props.delay;
+      var appInit = _props.appInit;
+      var initJumbotron = _props.initJumbotron;
+      var addProperty = _props.addProperty;
+      var aboutInit = _props.aboutInit;
+      var contactInit = _props.contactInit;
+      var footInit = _props.footInit;
 
-      this.timeout = setTimeout(function () {
-        _this2.setState({
-          AppMounted: true
+      this.timeout = setTimeout(appInit, delay);
+      setTimeout(initJumbotron, 1000);
+      _prismic2.default.api('https://robertchristiespa.prismic.io/api').then(function (api) {
+        return api.query(_prismic2.default.Predicates.at('my.index.uid', 'index'));
+      }).then(function (_ref2) {
+        var results = _ref2.results;
+
+        console.log(results[0].data);
+        // Init Properties
+        results[0].data['index.Properties'].value.forEach(function (_ref3) {
+          var Address = _ref3.Address;
+          var Link = _ref3.Link;
+          var Photo = _ref3.Photo;
+          var Price = _ref3.Price;
+
+          addProperty(Address.value, Link.value.url, Photo.value.main.url, Price.value);
         });
-      }, 500);
+        aboutInit(results[0].data['index.BackgroundImage'].value.main.url, results[0].data['index.Name'].value, results[0].data['index.Profile Pic'].value.main.url, results[0].data['index.Mobile Pic'].value.main.url, results[0].data['index.Paragraph'].value);
+        contactInit(results[0].data['index.botHeading'].value, results[0].data['index.botParagragh'].value, {
+          link: results[0].data['index.MobileLink'].value.url,
+          text: results[0].data['index.Mobile'].value
+        }, {
+          link: results[0].data['index.EmailLink'].value.url,
+          text: results[0].data['index.Email'].value
+        }, {
+          link: results[0].data['index.AddressLink'].value.url,
+          text: results[0].data['index.Address'].value
+        });
+        footInit(results[0].data['index.Copyright'].value, results[0].data['index.Information'].value, results[0].data['index.facebook'].value.url, results[0].data['index.Twitter'].value.url, results[0].data['index.Instagram'].value.url);
+      });
     }
   }, {
     key: 'componentWillUnmount',
-    value: function componentWillUnmount() {
-      clearTimeout(this.timeout);
-    }
+    value: function componentWillUnmount() {}
   }, {
     key: 'render',
     value: function render() {
-      var _props = this.props;
-      var menuOpen = _props.menuOpen;
-      var toggle = _props.toggle;
+      var _props2 = this.props;
+      var menuOpen = _props2.menuOpen;
+      var loaded = _props2.loaded;
+      var toggle = _props2.toggle;
+      var jumbotronLoaded = _props2.jumbotronLoaded;
 
       return _react2.default.createElement(
-        _radium.StyleRoot,
-        null,
-        _react2.default.createElement(
-          'h1',
-          null,
-          'App!!!!'
-        ),
-        _react2.default.createElement(
-          'div',
-          { className: 'Menu' },
-          menuOpen ? 'Open' : 'Closed'
-        ),
-        _react2.default.createElement(
-          'button',
-          { onClick: toggle },
-          'Toggle'
-        )
+        _reactMotion.Motion,
+        {
+          style: {
+            opacity: loaded ? (0, _reactMotion.spring)(1, _reactMotion.presets.noWobble) : (0, _reactMotion.spring)(0, _reactMotion.presets.noWobble)
+          } },
+        function (_ref4) {
+          var opacity = _ref4.opacity;
+          return _react2.default.createElement(
+            _radium.StyleRoot,
+            { style: [{ opacity: opacity }] },
+            _react2.default.createElement(_Nav2.default, null),
+            _react2.default.createElement(_Menu2.default, null),
+            _react2.default.createElement(_Jumbotron2.default, { load: jumbotronLoaded }),
+            _react2.default.createElement(_Featured2.default, null),
+            _react2.default.createElement(_About2.default, null),
+            _react2.default.createElement(_Contact2.default, null),
+            _react2.default.createElement(_Foot2.default, null)
+          );
+        }
       );
     }
   }]);
 
   return App;
-}(_react.Component)) || _class);
+}(_react.Component)) || _class) || _class);
 ;
 
 exports.default = App;
